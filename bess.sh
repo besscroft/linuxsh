@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.0.8                 *"
+echo -e "* Version: 1.0.9                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.0.8"
+sh_ver="1.0.9"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 Green_font_prefix="\033[32m" && Font_color_suffix="\033[0m"
@@ -79,11 +79,11 @@ Update_CentOS(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始更新系统中..."
+		if [[ "${release}" == "centos" ]]; then
+		yum update -y
+		fi
+		echo -e "${Info}系统升级成功！"
 	fi
-	if [[ "${release}" == "centos" ]]; then
-	yum update -y
-	fi
-	echo -e "${Info}系统升级成功！"
 }
 
 #安装常用软件包
@@ -92,11 +92,11 @@ Install_package(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始安装中..."
+		if [[ "${release}" == "centos" ]]; then
+		yum install -y curl vim wget unzip git nano yum-utils epel-release iftop dnf net-tools
+		fi
+		echo -e "${Info}安装成功！"
 	fi
-	if [[ "${release}" == "centos" ]]; then
-	yum install -y curl vim wget unzip git nano yum-utils epel-release iftop dnf net-tools
-	fi
-	echo -e "${Info}安装成功！"
 }
 
 #安装编译环境包
@@ -105,11 +105,11 @@ Install_make_package(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始安装编译环境包中..."
+		if [[ "${release}" == "centos" ]]; then
+		yum install -y curl-devel expat-devel gettext-devel openssl-devel zlibdevel gcc-c++ perl-ExtUtils-MakeMaker
+		fi
+		echo -e "${Info}安装成功！"
 	fi
-	if [[ "${release}" == "centos" ]]; then
-	yum install -y curl-devel expat-devel gettext-devel openssl-devel zlibdevel gcc-c++ perl-ExtUtils-MakeMaker
-	fi
-	echo -e "${Info}安装成功！"
 }
 
 #安装最新稳定版内核
@@ -118,22 +118,22 @@ Install_ml_kernel(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始更新内核中..."
-	fi
-	if [[ "${release}" == "centos" ]]; then
-	yum update -y
-	rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
-	yum install https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm -y
-	yum --disablerepo="*" --enablerepo="elrepo-kernel" list available
-	yum --enablerepo=elrepo-kernel install kernel-ml -y
-	sed -i 's/GRUB_DEFAULT=saved/GRUB_DEFAULT=0/' /etc/default/grub
-	grub2-mkconfig -o /boot/grub2/grub.cfg
-	fi
-	echo -e "${Tip} 重启系统后，请重新运行脚本开启${Red_font_prefix}BBR${Font_color_suffix}"
-	stty erase '^H' && read -p "需要重启系统后，才能成功安装(替换)新内核，是否现在重启 ? [Y/n] :" yn
-	[ -z "${yn}" ] && yn="y"
-	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 系统重启中..."
-		reboot
+		if [[ "${release}" == "centos" ]]; then
+		yum update -y
+		rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+		yum install https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm -y
+		yum --disablerepo="*" --enablerepo="elrepo-kernel" list available
+		yum --enablerepo=elrepo-kernel install kernel-ml -y
+		sed -i 's/GRUB_DEFAULT=saved/GRUB_DEFAULT=0/' /etc/default/grub
+		grub2-mkconfig -o /boot/grub2/grub.cfg
+		fi
+		echo -e "${Tip} 重启系统后，请重新运行脚本开启${Red_font_prefix}BBR${Font_color_suffix}"
+		stty erase '^H' && read -p "需要重启系统后，才能成功安装(替换)新内核，是否现在重启 ? [Y/n] :" yn
+		[ -z "${yn}" ] && yn="y"
+		if [[ $yn == [Yy] ]]; then
+			echo -e "${Info} 系统重启中..."
+			reboot
+		fi
 	fi
 }
 
@@ -143,31 +143,31 @@ Install_DockerCommunity(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始安装Docker中..."
-	fi
-	if [[ "${release}" == "centos" ]]; then
-	yum remove docker \
-                  docker-client \
-                  docker-client-latest \
-                  docker-common \
-                  docker-latest \
-                  docker-latest-logrotate \
-                  docker-logrotate \
-                  docker-engine
-	yum-config-manager \
-    --add-repo \
-    https://download.docker.com/linux/centos/docker-ce.repo
-	yum install docker-ce docker-ce-cli containerd.io -y
-	systemctl start docker
-	systemctl enable docker
-	fi
-	echo -e "${Info}安装成功！"
-	echo -e "${Info}已启动Docker！"
-	echo -e "${Info}已设置Docker开机自启！"
-	stty erase '^H' && read -p "想运行一下hello-world镜像吗 ? [Y/n] :" yn
-	[ -z "${yn}" ] && yn="y"
-	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始pull..."
-		docker run hello-world
+		if [[ "${release}" == "centos" ]]; then
+		yum remove docker \
+					docker-client \
+					docker-client-latest \
+					docker-common \
+					docker-latest \
+					docker-latest-logrotate \
+					docker-logrotate \
+					docker-engine
+		yum-config-manager \
+		--add-repo \
+		https://download.docker.com/linux/centos/docker-ce.repo
+		yum install docker-ce docker-ce-cli containerd.io -y
+		systemctl start docker
+		systemctl enable docker
+		fi
+		echo -e "${Info}安装成功！"
+		echo -e "${Info}已启动Docker！"
+		echo -e "${Info}已设置Docker开机自启！"
+		stty erase '^H' && read -p "想运行一下hello-world镜像吗 ? [Y/n] :" yn
+		[ -z "${yn}" ] && yn="y"
+		if [[ $yn == [Yy] ]]; then
+			echo -e "${Info} 开始pull..."
+			docker run hello-world
+		fi
 	fi
 }
 
@@ -177,9 +177,9 @@ System_Settings(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始设置系统配置中..."
+		ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+		echo -e "${Info}设置成功！"
 	fi
-	ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-	echo -e "${Info}设置成功！"
 }
 
 #BBR开启
@@ -188,14 +188,14 @@ BBR_start(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始设置BBR配置中..."
+		echo 'net.core.default_qdisc=fq' | sudo tee -a /etc/sysctl.conf
+		echo 'net.ipv4.tcp_congestion_control=bbr' | sudo tee -a /etc/sysctl.conf
+		sysctl -p
+		sysctl net.ipv4.tcp_congestion_control
+		sysctl net.ipv4.tcp_available_congestion_control
+		lsmod | grep bbr
+		echo -e "${Info}BBR启动成功！"
 	fi
-	echo 'net.core.default_qdisc=fq' | sudo tee -a /etc/sysctl.conf
-	echo 'net.ipv4.tcp_congestion_control=bbr' | sudo tee -a /etc/sysctl.conf
-	sysctl -p
-	sysctl net.ipv4.tcp_congestion_control
-	sysctl net.ipv4.tcp_available_congestion_control
-	lsmod | grep bbr
-	echo -e "${Info}BBR启动成功！"
 }
 
 #系统优化
