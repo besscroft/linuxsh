@@ -5,60 +5,115 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.0.9                 *"
+echo -e "* Version: 1.1.3                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.0.9"
+sh_ver="1.1.3"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
-Green_font_prefix="\033[32m" && Font_color_suffix="\033[0m"
+red='\033[0;31m'
+green='\033[0;32m'
+yellow='\033[0;33m'
+plain='\033[0m'
 
 #开始菜单
 start_menu(){
 clear
-echo && echo -e " CentOS一键安装管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
+echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
+ GitHub: ${green}[v${github}]${green}
   
 -- 欢迎使用！！！ --  
 
- ${Green_font_prefix}0.${Font_color_suffix} 升级系统
+ ${green}0.${green} 升级系统
 ————————————管理————————————
- ${Green_font_prefix}1.${Font_color_suffix} 安装常用软件包
- ${Green_font_prefix}2.${Font_color_suffix} 安装编译环境包
- ${Green_font_prefix}3.${Font_color_suffix} 安装最新稳定版内核
- ${Green_font_prefix}4.${Font_color_suffix} 安装Docker
+ ${green}1.${green} 安装常用软件包
+ ${red}2.${red} 安装编译环境包
+ ${red}3.${red} 安装最新稳定版内核
+ ${green}4.${green} 安装Docker
+ ${green}5.${green} 安装一些软件
 ————————————优化————————————
- ${Green_font_prefix}5.${Font_color_suffix} 系统相关设置
- ${Green_font_prefix}6.${Font_color_suffix} BBR开启
- ${Green_font_prefix}7.${Font_color_suffix} 系统优化
- ${Green_font_prefix}9.${Font_color_suffix} 退出脚本
+ ${green}6.${green} 系统相关设置
+ ${green}7.${green} BBR开启
+ ${red}8.${red} 系统优化
+ ${plain}9.${plain} 退出脚本
 ————————————————————————————————" && echo
 read -p " 请输入数字 [0-9]:" num
 case "$num" in
 	0)
 	Update_CentOS
+	start_menu
 	;;
 	1)
 	Install_package
+	start_menu
 	;;
 	2)
 	Install_make_package
+	start_menu
 	;;
 	3)
 	Install_ml_kernel
+	start_menu
 	;;
 	4)
 	Install_DockerCommunity
+	start_menu
 	;;
 	5)
-	System_Settings
+	start_menu2
 	;;
 	6)
-	BBR_start
+	System_Settings
+	start_menu
 	;;
 	7)
+	BBR_start
+	start_menu
+	;;
+	8)
 	System_Optim
+	start_menu
+	;;
+	9)
+	exit 1
+	;;
+	*)
+	clear
+	echo -e "${Error}:请输入正确数字 [0-11]"
+	sleep 5s
+	start_menu
+	;;
+esac
+}
+
+#子菜单
+start_menu2(){
+clear
+echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
+  
+-- 二级菜单 --  
+
+ ${green}0.${green} 回到上级菜单
+————————————管理————————————
+ ${green}1.${green} 安装SSR(Docker)
+ ${green}2.${green} 安装BT面板
+————————————优化————————————
+ ${green}9.${plain} 退出脚本
+————————————————————————————————" && echo
+read -p " 请输入数字 [0-9]:" num
+case "$num" in
+	0)
+	start_menu
+	;;
+	1)
+	Install_SSR_Docker
+	start_menu
+	;;
+	1)
+	Install_BT
+	start_menu
 	;;
 	9)
 	exit 1
@@ -81,6 +136,7 @@ Update_CentOS(){
 		echo -e "${Info} 开始更新系统中..."
 		if [[ "${release}" == "centos" ]]; then
 		yum update -y
+		yum upgrade -y
 		fi
 		echo -e "${Info}系统升级成功！"
 	fi
@@ -127,7 +183,7 @@ Install_ml_kernel(){
 		sed -i 's/GRUB_DEFAULT=saved/GRUB_DEFAULT=0/' /etc/default/grub
 		grub2-mkconfig -o /boot/grub2/grub.cfg
 		fi
-		echo -e "${Tip} 重启系统后，请重新运行脚本开启${Red_font_prefix}BBR${Font_color_suffix}"
+		echo -e "${Tip} 重启系统后，请重新运行脚本开启${green}BBR${green}"
 		stty erase '^H' && read -p "需要重启系统后，才能成功安装(替换)新内核，是否现在重启 ? [Y/n] :" yn
 		[ -z "${yn}" ] && yn="y"
 		if [[ $yn == [Yy] ]]; then
@@ -203,6 +259,97 @@ System_Optim(){
 	echo -e "${Info}还没写！"
 }
 
+#安装SSR(Docker)
+Install_SSR_Docker(){
+	echo -e "${red} 请确保已经安装了Docker，否则将无法安装Docker版SSR！${green}"
+	stty erase '^H' && read -p "准备安装SSR了吗 ? [Y/n] :" yn
+	[ -z "${yn}" ] && yn="y"
+	if [[ $yn == [Yy] ]]; then
+		echo -e "${Info} 开始安装SSR中..."
+		#还没写
+		echo "Please enter password:"
+		read -p "(default password: 52bess.com):" shadowsockspwd
+		[ -z "${shadowsockspwd}" ] && shadowsockspwd="52bess.com"
+		echo
+		echo "password = ${shadowsockspwd}"
+		echo
+		while true
+		do
+		echo -e "Please enter a port for [1-65535]"
+		read -p "(default port: 22333):" shadowsocksport
+		[ -z "${shadowsocksport}" ] && shadowsocksport="22333"
+		expr ${shadowsocksport} + 0 &>/dev/null
+		if [ $? -eq 0 ]; then
+			if [ ${shadowsocksport} -ge 1 ] && [ ${shadowsocksport} -le 65535 ]; then
+				echo
+				echo "port = ${shadowsocksport}"
+				echo
+				break
+			else
+				echo -e "${red}Error:${plain} Please enter a correct number [1-65535]"
+			fi
+		else
+			echo -e "${red}Error:${plain} Please enter a correct number [1-65535]"
+		fi
+		done
+
+		echo -e "${Info} 开始pull SSR中..."
+		docker pull teddysun/shadowsocks-r
+		mkdir -p /etc/shadowsocks-r
+		cat > /etc/shadowsocks-r/config.json <<-EOF
+		{ 
+			"server":"$(get_ip)", 
+			"server_ipv6":"::", 
+			"server_port":${shadowsocksport}, 
+			"local_address":"127.0.0.1", 
+			"local_port":1080, 
+			"password":"${shadowsockspwd}", 
+			"timeout":120, 
+			"method":"chacha20-ietf", 
+			"protocol":"auth_aes128_md5", 
+			"protocol_param":"", 
+			"obfs":"tls1.2_ticket_auth", 
+			"obfs_param":"itunes.apple.com", 
+			"redirect":"", 
+			"dns_ipv6":false, 
+			"fast_open":true, 
+			"workers":1 
+		}
+		EOF
+		docker run -d -p ${shadowsocksport}:${shadowsocksport} -p ${shadowsocksport}:${shadowsocksport}/udp --name ssr --restart=always -v /etc/shadowsocks-r:/etc/shadowsocks-r teddysun/shadowsocks-r
+		Install_Completed_SSR
+		echo -e "${Info}安装SSR成功！"
+	fi
+}
+
+#SSR安装完成打印信息
+Install_Completed_SSR() {
+    clear
+    echo -e "以下是配置信息！"
+	echo
+    echo -e "Your Server IP        : ${green} $(get_ip) ${plain}"
+    echo -e "Your Server Port      : ${green} ${shadowsocksport} ${plain}"
+    echo -e "Your Password         : ${green} ${shadowsockspwd} ${plain}"
+    echo -e "Your Encryption Method: ${green} chacha20-ietf ${plain}"
+    echo -e "Protocol              : ${green} auth_aes128_md5 ${plain}"
+    echo -e "obfs                  : ${green} tls1.2_ticket_auth ${plain}"
+	echo -e "obfs_param            : ${green} itunes.apple.com ${plain}"
+    echo
+}
+
+#安装BT面板
+Install_BT(){
+	stty erase '^H' && read -p "准备好安装BT了吗 ? [Y/n] :" yn
+	[ -z "${yn}" ] && yn="y"
+	if [[ $yn == [Yy] ]]; then
+		echo -e "${Info} 开始安装BT面板中..."
+		echo -e "${Info} 安装过程中需要手动确认..."
+		yum install -y wget && wget -O install.sh http://download.bt.cn/install/install_6.0.sh && sh install.sh
+		echo -e "${Info} BT面板安装成功！"
+	fi
+}
+
+
 ##系统检测组件##
 
 #检查系统
@@ -222,6 +369,14 @@ check_sys(){
 	elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
 		release="centos"
     fi
+}
+
+#获取ip
+get_ip() {
+    local IP=$( ip addr | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | egrep -v "^192\.168|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-2]\.|^10\.|^127\.|^255\.|^0\." | head -n 1 )
+    [ -z ${IP} ] && IP=$( wget -qO- -t1 -T2 ipv4.icanhazip.com )
+    [ -z ${IP} ] && IP=$( wget -qO- -t1 -T2 ipinfo.io/ip )
+    [ ! -z ${IP} ] && echo ${IP} || echo
 }
 
 #检查Linux版本
