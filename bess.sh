@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.1.4                 *"
+echo -e "* Version: 1.1.5                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.1.4"
+sh_ver="1.1.5"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -79,7 +79,6 @@ case "$num" in
 	;;
 	9)
 	Update_Shell
-	start_menu
 	;;
 	10)
 	exit 1
