@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.1.3                 *"
+echo -e "* Version: 1.1.4                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.1.3"
+sh_ver="1.1.4"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -37,9 +37,10 @@ echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
  ${green}6.${green} 系统相关设置
  ${green}7.${green} BBR开启
  ${red}8.${red} 系统优化
- ${plain}9.${plain} 退出脚本
+ ${plain}9.${plain} 升级脚本
+ ${plain}10.${plain} 退出脚本
 ————————————————————————————————" && echo
-read -p " 请输入数字 [0-9]:" num
+read -p " 请输入数字 [0-10]:" num
 case "$num" in
 	0)
 	Update_CentOS
@@ -77,11 +78,15 @@ case "$num" in
 	start_menu
 	;;
 	9)
+	Update_Shell
+	start_menu
+	;;
+	10)
 	exit 1
 	;;
 	*)
 	clear
-	echo -e "${Error}:请输入正确数字 [0-11]"
+	echo -e "${Error}:请输入正确数字 [0-10]"
 	sleep 5s
 	start_menu
 	;;
@@ -109,20 +114,20 @@ case "$num" in
 	;;
 	1)
 	Install_SSR_Docker
-	start_menu
+	start_menu2
 	;;
 	1)
 	Install_BT
-	start_menu
+	start_menu2
 	;;
 	9)
 	exit 1
 	;;
 	*)
 	clear
-	echo -e "${Error}:请输入正确数字 [0-11]"
+	echo -e "${Error}:请输入正确数字 [0-9]"
 	sleep 5s
-	start_menu
+	start_menu2
 	;;
 esac
 }
@@ -257,6 +262,27 @@ BBR_start(){
 #系统优化
 System_Optim(){
 	echo -e "${Info}还没写！"
+}
+
+#更新脚本
+Update_Shell(){
+	echo -e "当前版本为 [ ${sh_ver} ]，开始检测最新版本..."
+	sh_new_ver=$(wget --no-check-certificate -qO- "http://${github}/bess.sh"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1)
+	[[ -z ${sh_new_ver} ]] && echo -e "${Error} 检测最新版本失败 !" && start_menu
+	if [[ ${sh_new_ver} != ${sh_ver} ]]; then
+		echo -e "发现新版本[ ${sh_new_ver} ]，是否更新？[Y/n]"
+		read -p "(默认: y):" yn
+		[[ -z "${yn}" ]] && yn="y"
+		if [[ ${yn} == [Yy] ]]; then
+			wget -N --no-check-certificate http://${github}/bess.sh && chmod +x bess.sh
+			echo -e "脚本已更新为最新版本[ ${sh_new_ver} ] !"
+		else
+			echo && echo "	已取消..." && echo
+		fi
+	else
+		echo -e "当前已是最新版本[ ${sh_new_ver} ] !"
+		sleep 5s
+	fi
 }
 
 #安装SSR(Docker)
