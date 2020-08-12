@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.1.6                 *"
+echo -e "* Version: 1.1.7                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.1.6"
+sh_ver="1.1.7"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -103,6 +103,7 @@ echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
 ————————————管理————————————
  ${green}1.${green} 安装SSR(Docker)
  ${green}2.${green} 安装BT面板
+ ${green}3.${green} 安装Docker(阿里源)
 ————————————优化————————————
  ${green}9.${plain} 退出脚本
 ————————————————————————————————" && echo
@@ -115,8 +116,12 @@ case "$num" in
 	Install_SSR_Docker
 	start_menu2
 	;;
-	1)
+	2)
 	Install_BT
+	start_menu2
+	;;
+	3)
+	Install_DockerCommunity_ali
 	start_menu2
 	;;
 	9)
@@ -216,6 +221,42 @@ Install_DockerCommunity(){
 		--add-repo \
 		https://download.docker.com/linux/centos/docker-ce.repo
 		yum install docker-ce docker-ce-cli containerd.io -y
+		docker version
+		systemctl start docker
+		systemctl enable docker
+		fi
+		echo -e "${Info}安装成功！"
+		echo -e "${Info}已启动Docker！"
+		echo -e "${Info}已设置Docker开机自启！"
+		stty erase '^H' && read -p "想运行一下hello-world镜像吗 ? [Y/n] :" yn
+		[ -z "${yn}" ] && yn="y"
+		if [[ $yn == [Yy] ]]; then
+			echo -e "${Info} 开始pull..."
+			docker run hello-world
+		fi
+	fi
+}
+
+#安装Docker(阿里源)
+Install_DockerCommunity_ali(){
+	stty erase '^H' && read -p "准备好安装Docker了吗 ? [Y/n] :" yn
+	[ -z "${yn}" ] && yn="y"
+	if [[ $yn == [Yy] ]]; then
+		echo -e "${Info} 开始安装Docker中..."
+		if [[ "${release}" == "centos" ]]; then
+		yum remove docker \
+					docker-client \
+					docker-client-latest \
+					docker-common \
+					docker-latest \
+					docker-latest-logrotate \
+					docker-logrotate \
+					docker-engine
+		sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+		sudo yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+		sudo yum makecache fast
+		sudo yum -y install docker-ce
+		docker version
 		systemctl start docker
 		systemctl enable docker
 		fi
