@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.1.5                 *"
+echo -e "* Version: 1.1.6                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.1.5"
+sh_ver="1.1.6"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -166,7 +166,7 @@ Install_make_package(){
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始安装编译环境包中..."
 		if [[ "${release}" == "centos" ]]; then
-		yum install -y curl-devel expat-devel gettext-devel openssl-devel zlibdevel gcc-c++ perl-ExtUtils-MakeMaker
+		yum install -y curl-devel expat-devel gettext-devel openssl-devel zlibdevel gcc-c++ perl-ExtUtils-MakeMaker zlib-devel bzip2-devel ncurses-devel sqlitedevel readline-devel tk-devel gcc make
 		fi
 		echo -e "${Info}安装成功！"
 	fi
