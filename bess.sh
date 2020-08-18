@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.1.7                 *"
+echo -e "* Version: 1.1.8                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.1.7"
+sh_ver="1.1.8"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -29,9 +29,9 @@ echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
  ${green}0.${green} 升级系统
 ————————————管理————————————
  ${green}1.${green} 安装常用软件包
- ${red}2.${red} 安装编译环境包
+ ${red}2.${red} 安装或更新编译环境包
  ${red}3.${red} 安装最新稳定版内核
- ${green}4.${green} 安装Docker
+ ${green}4.${green} 安装开发软件
  ${green}5.${green} 安装一些软件
 ————————————优化————————————
  ${green}6.${green} 系统相关设置
@@ -59,7 +59,7 @@ case "$num" in
 	start_menu
 	;;
 	4)
-	Install_DockerCommunity
+	start_menu3
 	start_menu
 	;;
 	5)
@@ -92,7 +92,7 @@ case "$num" in
 esac
 }
 
-#子菜单
+#子菜单 安装软件
 start_menu2(){
 clear
 echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
@@ -104,6 +104,7 @@ echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
  ${green}1.${green} 安装SSR(Docker)
  ${green}2.${green} 安装BT面板
  ${green}3.${green} 安装Docker(阿里源)
+ ${green}3.${green} 安装Docker
 ————————————优化————————————
  ${green}9.${plain} 退出脚本
 ————————————————————————————————" && echo
@@ -124,6 +125,10 @@ case "$num" in
 	Install_DockerCommunity_ali
 	start_menu2
 	;;
+	3)
+	Install_DockerCommunity
+	start_menu2
+	;;
 	9)
 	exit 1
 	;;
@@ -132,6 +137,40 @@ case "$num" in
 	echo -e "${Error}:请输入正确数字 [0-9]"
 	sleep 5s
 	start_menu2
+	;;
+esac
+}
+
+#子菜单 安装开发软件
+start_menu3(){
+clear
+echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
+  
+-- 二级菜单，安装开发软件 --  
+
+ ${green}0.${green} 回到上级菜单
+————————————管理————————————
+ ${green}1.${green} 安装Redis
+————————————优化————————————
+ ${green}9.${plain} 退出脚本
+————————————————————————————————" && echo
+read -p " 请输入数字 [0-9]:" num
+case "$num" in
+	0)
+	start_menu
+	;;
+	1)
+	Install_Redis
+	start_menu3
+	;;
+	9)
+	exit 1
+	;;
+	*)
+	clear
+	echo -e "${Error}:请输入正确数字 [0-9]"
+	sleep 5s
+	start_menu3
 	;;
 esac
 }
@@ -164,7 +203,7 @@ Install_package(){
 	fi
 }
 
-#安装编译环境包
+#安装或更新编译环境包
 Install_make_package(){
 	stty erase '^H' && read -p "准备好安装编译环境包了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
@@ -172,6 +211,7 @@ Install_make_package(){
 		echo -e "${Info} 开始安装编译环境包中..."
 		if [[ "${release}" == "centos" ]]; then
 		yum install -y curl-devel expat-devel gettext-devel openssl-devel zlibdevel gcc-c++ perl-ExtUtils-MakeMaker zlib-devel bzip2-devel ncurses-devel sqlitedevel readline-devel tk-devel gcc make
+		yum -y install centos-release-scl && yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-binutils && scl enable devtoolset-9 bash
 		fi
 		echo -e "${Info}安装成功！"
 	fi
@@ -415,6 +455,22 @@ Install_BT(){
 	fi
 }
 
+#安装Redis
+Install_Redis(){
+	stty erase '^H' && read -p "准备好安装Redis了吗?需要先安装或升级gcc [Y/n] :" yn
+	[ -z "${yn}" ] && yn="y"
+	if [[ $yn == [Yy] ]]; then
+		echo -e "${Info} 开始安装Redis中..."
+		yum -y install centos-release-scl && yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-binutils && scl enable devtoolset-9 bash
+		wget http://download.redis.io/releases/redis-6.0.6.tar.gz
+		mv redis-6.0.6.tar.gz /usr/local
+		cd /usr/local
+		tar -xzvf redis-6.0.6.tar.gz
+		cd redis-6.0.6
+		make
+		echo -e "${Info} Redis安装成功！"
+	fi
+}
 
 ##系统检测组件##
 
