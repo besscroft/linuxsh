@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.1.8                 *"
+echo -e "* Version: 1.2.0                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.1.8"
+sh_ver="1.2.0"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -461,13 +461,12 @@ Install_Redis(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始安装Redis中..."
-		yum -y install centos-release-scl && yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-binutils && scl enable devtoolset-9 bash
 		wget http://download.redis.io/releases/redis-6.0.6.tar.gz
-		mv redis-6.0.6.tar.gz /usr/local
-		cd /usr/local
 		tar -xzvf redis-6.0.6.tar.gz
 		cd redis-6.0.6
+		make clean
 		make
+		make install
 		echo -e "${Info} Redis安装成功！"
 	fi
 }
