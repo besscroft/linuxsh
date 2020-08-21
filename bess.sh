@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.2.1                 *"
+echo -e "* Version: 1.2.2                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.2.1"
+sh_ver="1.2.2"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -104,7 +104,7 @@ echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
  ${green}1.${green} 安装SSR(Docker)
  ${green}2.${green} 安装BT面板
  ${green}3.${green} 安装Docker(阿里源)
- ${green}3.${green} 安装Docker
+ ${green}4.${green} 安装Docker
 ————————————优化————————————
  ${green}9.${plain} 退出脚本
 ————————————————————————————————" && echo
@@ -125,7 +125,7 @@ case "$num" in
 	Install_DockerCommunity_ali
 	start_menu2
 	;;
-	3)
+	4)
 	Install_DockerCommunity
 	start_menu2
 	;;
