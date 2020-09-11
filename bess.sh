@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.2.2                 *"
+echo -e "* Version: 1.2.3                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="1.2.2"
+sh_ver="1.2.3"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -52,11 +52,9 @@ case "$num" in
 	;;
 	2)
 	Install_make_package
-	start_menu
 	;;
 	3)
 	Install_ml_kernel
-	start_menu
 	;;
 	4)
 	start_menu3
@@ -115,19 +113,15 @@ case "$num" in
 	;;
 	1)
 	Install_SSR_Docker
-	start_menu2
 	;;
 	2)
 	Install_BT
-	start_menu2
 	;;
 	3)
 	Install_DockerCommunity_ali
-	start_menu2
 	;;
 	4)
 	Install_DockerCommunity
-	start_menu2
 	;;
 	9)
 	exit 1
