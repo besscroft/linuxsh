@@ -3,7 +3,7 @@
 
 #### Bess_CentOS_7
 
-```
+```shell
 wget -N --no-check-certificate "https://raw.githubusercontent.com/besscroft/LinuxShellGo/master/Bess_CentOS_7.sh"
 chmod +x Bess_CentOS_7.sh
 ./Bess_CentOS_7.sh
@@ -11,8 +11,16 @@ chmod +x Bess_CentOS_7.sh
 
 #### Bess_Ubuntu_1804
 
-```
+```shell
 wget -N --no-check-certificate "https://raw.githubusercontent.com/besscroft/LinuxShellGo/master/Bess_Ubuntu_1804.sh"
 chmod +x Bess_Ubuntu_1804.sh
 ./Bess_Ubuntu_1804.sh
+```
+
+#### Bess_Debian_10
+
+```shell
+wget -N --no-check-certificate "https://raw.githubusercontent.com/besscroft/LinuxShellGo/master/Bess_Debian_10.sh"
+chmod +x Bess_Debian_10.sh
+./Bess_Debian_10.sh
 ```
