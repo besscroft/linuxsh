@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: Debian 10     *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 0.0.1                 *"
+echo -e "* Version: 0.0.2                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="0.0.1"
+sh_ver="0.0.2"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -227,8 +227,6 @@ Install_DockerCommunity(){
 		sudo apt-get update -y
 		sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 		docker version
-		systemctl start docker
-		systemctl enable docker
 		fi
 		echo -e "${Info}安装成功！"
 		echo -e "${Info}已启动Docker！"
@@ -260,8 +258,6 @@ Install_DockerCommunity_tsinghua(){
 		sudo apt-get update -y
 		sudo apt-get install docker-ce -y
 		docker version
-		systemctl start docker
-		systemctl enable docker
 		fi
 		echo -e "${Info}安装成功！"
 		echo -e "${Info}已启动Docker！"
