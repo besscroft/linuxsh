@@ -97,6 +97,7 @@ echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
  ${green}2.${green} 安装BT面板
  ${green}3.${green} 安装Docker(阿里源)
  ${green}4.${green} 安装Docker
+ ${green}5.${green} 安装Docker版CCAA
 ————————————优化————————————
  ${green}9.${plain} 退出脚本
 ————————————————————————————————" && echo
@@ -116,6 +117,9 @@ case "$num" in
 	;;
 	4)
 	Install_DockerCommunity
+	;;
+	5)
+	Install_DockerCCAA
 	;;
 	9)
 	exit 1
@@ -299,6 +303,46 @@ Install_DockerCommunity_ali(){
 	fi
 }
 
+# 安装Docker版CCAA
+Install_DockerCCAA(){
+	echo -e "${red} 请确保已经安装了Docker，否则将无法安装Docker版CCAA！${green}"
+	stty erase '^H' && read -p "准备安装SSR了吗 ? [Y/n] :" yn
+	[ -z "${yn}" ] && yn="y"
+	if [[ $yn == [Yy] ]]; then
+		echo -e "${Info} 开始安装CCAA中..."
+		echo "Please enter password:"
+		read -p "(default password: besscroft.com):" ccaapwd
+		[ -z "${ccaapwd}" ] && ccaapwd="besscroft.com"
+		echo
+		echo "password = ${ccaapwd}"
+		echo "Please enter 宿主机下载目录:"
+		read -p "(default 下载目录: /www/wwwroot/download):" hosturl
+		[ -z "${hosturl}" ] && hosturl="/www/wwwroot/download"
+		echo
+		echo "下载目录 = ${hosturl}"
+		echo -e "${Info} 开始pull CCAA中..."
+		mkdir -p ${hosturl}
+		docker run --name="ccaa" -d -p 6080:6080 -p 6081:6081 -p 6800:6800 -p 51413:51413 \
+    -v ${hosturl}:/data/ccaaDown \
+    -e PASS="${ccaapwd}" \
+    helloz/ccaa \
+    sh -c "dccaa pass && dccaa start"
+		Install_Completed_CCAA
+		echo -e "${Info}安装CCAA成功！"
+	fi
+}
+
+# CCAA安装完成打印信息
+Install_Completed_CCAA() {
+    clear
+    echo -e "以下是配置信息！"
+	echo
+    echo -e "请确保防火墙放行右侧端口: ${green} 6080、6081、6800、51413 ${plain}"
+    echo -e "Aria2面板访问地址      : ${green} http://$(get_ip):6080"
+    echo -e "认证密码			   : ${green} ${ccaapwd} ${plain}"
+    echo
+}
+
 #系统相关设置
 System_Settings(){
 	stty erase '^H' && read -p "准备好设置系统配置了吗 ? [Y/n] :" yn
@@ -359,10 +403,9 @@ Install_SSR_Docker(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始安装SSR中..."
-		#还没写
 		echo "Please enter password:"
-		read -p "(default password: 52bess.com):" shadowsockspwd
-		[ -z "${shadowsockspwd}" ] && shadowsockspwd="52bess.com"
+		read -p "(default password: besscroft.com):" shadowsockspwd
+		[ -z "${shadowsockspwd}" ] && shadowsockspwd="besscroft.com"
 		echo
 		echo "password = ${shadowsockspwd}"
 		echo
