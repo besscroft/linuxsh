@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: Ubuntu 18.04  *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 0.0.4                 *"
+echo -e "* Version: 0.0.5                 *"
 echo -e "* Author: BessCroft              *"
-echo -e "* Blog: https://besscroft.com       *"
+echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="0.0.4"
+sh_ver="0.0.5"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -142,7 +142,7 @@ echo && echo -e " Ubuntu一键安装管理脚本 ${green}[v${sh_ver}]${green}
 
  ${green}0.${green} 回到上级菜单
 ————————————管理————————————
- ${green}1.${green} 安装Redis
+ ${green}1.${green} 安装Redis(下个版本更新)
 ————————————优化————————————
  ${green}9.${plain} 退出脚本
 ————————————————————————————————" && echo
@@ -495,7 +495,7 @@ Install_BT(){
 
 # 安装Redis
 Install_Redis(){
-	echo -e "${Info} 安装脚本维护中..."
+	echo -e "${Info} 将在下个版本更新..."
 }
 
 ##系统检测组件##

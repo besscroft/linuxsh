@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.2.6                 *"
+echo -e "* Version: 1.2.7                 *"
 echo -e "* Author: BessCroft              *"
-echo -e "* Blog: https://besscroft.com       *"
+echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="1.2.6"
+sh_ver="1.2.7"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -142,7 +142,7 @@ echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
 
  ${green}0.${green} 回到上级菜单
 ————————————管理————————————
- ${green}1.${green} 安装Redis
+ ${green}1.${green} 安装Redis(下个版本更新)
 ————————————优化————————————
  ${green}9.${plain} 退出脚本
 ————————————————————————————————" && echo
@@ -518,19 +518,7 @@ Install_BT(){
 
 # 安装Redis
 Install_Redis(){
-	echo -e "${Info} 安装脚本维护中..."
-	# stty erase '^H' && read -p "准备好安装Redis了吗?需要先安装或升级gcc [Y/n] :" yn
-	# [ -z "${yn}" ] && yn="y"
-	# if [[ $yn == [Yy] ]]; then
-	# 	echo -e "${Info} 开始安装Redis中..."
-	# 	wget http://download.redis.io/releases/redis-6.0.6.tar.gz
-	# 	tar -xzvf redis-6.0.6.tar.gz
-	# 	cd redis-6.0.6
-	# 	make clean
-	# 	make
-	# 	make install
-	# 	echo -e "${Info} Redis安装成功！"
-	# fi
+	echo -e "${Info} 将在下个版本更新..."
 }
 
 ##系统检测组件##
