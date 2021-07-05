@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.2.5                 *"
+echo -e "* Version: 1.2.6                 *"
 echo -e "* Author: BessCroft              *"
-echo -e "* Blog: https://52bess.com       *"
+echo -e "* Blog: https://besscroft.com       *"
 echo -e "**********************************"
 
-sh_ver="1.2.5"
+sh_ver="1.2.6"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'

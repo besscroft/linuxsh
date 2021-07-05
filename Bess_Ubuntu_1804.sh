@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: Ubuntu 18.04  *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 0.0.3                 *"
+echo -e "* Version: 0.0.4                 *"
 echo -e "* Author: BessCroft              *"
-echo -e "* Blog: https://52bess.com       *"
+echo -e "* Blog: https://besscroft.com       *"
 echo -e "**********************************"
 
-sh_ver="0.0.3"
+sh_ver="0.0.4"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
