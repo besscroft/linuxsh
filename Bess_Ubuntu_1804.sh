@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: Ubuntu 18.04  *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 0.0.2                 *"
+echo -e "* Version: 0.0.3                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://52bess.com       *"
 echo -e "**********************************"
 
-sh_ver="0.0.2"
+sh_ver="0.0.3"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -18,7 +18,7 @@ green='\033[0;32m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
-#开始菜单
+# 开始菜单
 start_menu(){
 clear
 echo && echo -e " Ubuntu一键安装管理脚本 ${green}[v${sh_ver}]${green}
@@ -84,7 +84,7 @@ case "$num" in
 esac
 }
 
-#子菜单 安装软件
+# 子菜单 安装软件
 start_menu2(){
 clear
 echo && echo -e " Ubuntu一键安装管理脚本 ${green}[v${sh_ver}]${green}
@@ -97,6 +97,7 @@ echo && echo -e " Ubuntu一键安装管理脚本 ${green}[v${sh_ver}]${green}
  ${green}2.${green} 安装BT面板
  ${green}3.${green} 安装Docker(阿里源)
  ${green}4.${green} 安装Docker
+ ${green}5.${green} 安装Docker版CCAA
 ————————————优化————————————
  ${green}9.${plain} 退出脚本
 ————————————————————————————————" && echo
@@ -117,6 +118,9 @@ case "$num" in
 	4)
 	Install_DockerCommunity
 	;;
+	5)
+	Install_DockerCCAA
+	;;
 	9)
 	exit 1
 	;;
@@ -129,7 +133,7 @@ case "$num" in
 esac
 }
 
-#子菜单 安装开发软件
+# 子菜单 安装开发软件
 start_menu3(){
 clear
 echo && echo -e " Ubuntu一键安装管理脚本 ${green}[v${sh_ver}]${green}
@@ -163,7 +167,7 @@ esac
 }
 
 ##执行方法##
-#升级系统
+# 升级系统
 Update_Ubuntu(){
 	stty erase '^H' && read -p "准备好更新系统了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
@@ -177,7 +181,7 @@ Update_Ubuntu(){
 	fi
 }
 
-#安装常用软件包
+# 安装常用软件包
 Install_package(){
 	stty erase '^H' && read -p "准备好安装了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
@@ -190,7 +194,7 @@ Install_package(){
 	fi
 }
 
-#安装或更新编译环境包
+# 安装或更新编译环境包
 Install_make_package(){
 	stty erase '^H' && read -p "准备好安装编译环境包了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
@@ -203,12 +207,12 @@ Install_make_package(){
 	fi
 }
 
-#安装最新稳定版内核
+# 安装最新稳定版内核
 Install_ml_kernel(){
 	echo -e "${Info} 还没写..."
 }
 
-#安装Docker
+# 安装Docker
 Install_DockerCommunity(){
 	stty erase '^H' && read -p "准备好安装Docker了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
@@ -246,7 +250,7 @@ Install_DockerCommunity(){
 	fi
 }
 
-#安装Docker(阿里源)
+# 安装Docker(阿里源)
 Install_DockerCommunity_ali(){
 	stty erase '^H' && read -p "准备好安装Docker了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
@@ -276,7 +280,47 @@ Install_DockerCommunity_ali(){
 	fi
 }
 
-#系统相关设置
+# 安装Docker版CCAA
+Install_DockerCCAA(){
+	echo -e "${red} 请确保已经安装了Docker，否则将无法安装Docker版CCAA！${green}"
+	stty erase '^H' && read -p "准备安装SSR了吗 ? [Y/n] :" yn
+	[ -z "${yn}" ] && yn="y"
+	if [[ $yn == [Yy] ]]; then
+		echo -e "${Info} 开始安装CCAA中..."
+		echo "Please enter password:"
+		read -p "(default password: besscroft.com):" ccaapwd
+		[ -z "${ccaapwd}" ] && ccaapwd="besscroft.com"
+		echo
+		echo "password = ${ccaapwd}"
+		echo "Please enter 宿主机下载目录:"
+		read -p "(default 下载目录: /www/wwwroot/download):" hosturl
+		[ -z "${hosturl}" ] && hosturl="/www/wwwroot/download"
+		echo
+		echo "下载目录 = ${hosturl}"
+		echo -e "${Info} 开始pull CCAA中..."
+		mkdir -p ${hosturl}
+		docker run --name="ccaa" -d -p 6080:6080 -p 6081:6081 -p 6800:6800 -p 51413:51413 \
+    -v ${hosturl}:/data/ccaaDown \
+    -e PASS="${ccaapwd}" \
+    helloz/ccaa \
+    sh -c "dccaa pass && dccaa start"
+		Install_Completed_CCAA
+		echo -e "${Info}安装CCAA成功！"
+	fi
+}
+
+# CCAA安装完成打印信息
+Install_Completed_CCAA() {
+    clear
+    echo -e "以下是配置信息！"
+	echo
+    echo -e "请确保防火墙放行右侧端口: ${green} 6080、6081、6800、51413 ${plain}"
+    echo -e "Aria2面板访问地址      : ${green} http://$(get_ip):6080"
+    echo -e "认证密码			   : ${green} ${ccaapwd} ${plain}"
+    echo
+}
+
+# 系统相关设置
 System_Settings(){
 	stty erase '^H' && read -p "准备好设置系统配置了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
@@ -287,7 +331,7 @@ System_Settings(){
 	fi
 }
 
-#BBR开启
+# BBR开启
 BBR_start(){
 	stty erase '^H' && read -p "准备开启BBR了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
@@ -303,12 +347,12 @@ BBR_start(){
 	fi
 }
 
-#系统优化
+# 系统优化
 System_Optim(){
 	echo -e "${Info}还没写！"
 }
 
-#更新脚本
+# 更新脚本
 Update_Shell(){
 	echo -e "当前版本为 [ ${sh_ver} ]，开始检测最新版本..."
 	sh_new_ver=$(wget --no-check-certificate -qO- "http://${github}/Bess_Ubuntu_1804.sh"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1)
@@ -329,17 +373,16 @@ Update_Shell(){
 	fi
 }
 
-#安装SSR(Docker)
+# 安装SSR(Docker)
 Install_SSR_Docker(){
 	echo -e "${red} 请确保已经安装了Docker，否则将无法安装Docker版SSR！${green}"
 	stty erase '^H' && read -p "准备安装SSR了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "${Info} 开始安装SSR中..."
-		#还没写
 		echo "Please enter password:"
-		read -p "(default password: 52bess.com):" shadowsockspwd
-		[ -z "${shadowsockspwd}" ] && shadowsockspwd="52bess.com"
+		read -p "(default password: besscroft.com):" shadowsockspwd
+		[ -z "${shadowsockspwd}" ] && shadowsockspwd="besscroft.com"
 		echo
 		echo "password = ${shadowsockspwd}"
 		echo
@@ -362,7 +405,37 @@ Install_SSR_Docker(){
 			echo -e "${red}Error:${plain} Please enter a correct number [1-65535]"
 		fi
 		done
-
+		echo "Please enter 加密method:"
+		read -p "(default method: chacha20-ietf):" shadowsocksmethod
+		[ -z "${shadowsocksmethod}" ] && shadowsocksmethod="chacha20-ietf"
+		echo
+		echo "method = ${shadowsocksmethod}"
+		echo
+		echo "Please enter 协议protocol:"
+		read -p "(default method: auth_aes128_md5):" shadowsocksprotocol
+		[ -z "${shadowsocksprotocol}" ] && shadowsocksprotocol="auth_aes128_md5"
+		echo
+		echo "method = ${shadowsocksprotocol}"
+		echo
+		echo "Please enter 协议参数protocol_param:"
+		read -p "(default method: 默认为空):" shadowsocksprotocolparam
+		[ -z "${shadowsocksprotocolparam}" ] && shadowsocksprotocolparam=""
+		echo
+		echo "method = ${shadowsocksprotocolparam}"
+		echo
+		echo "Please enter 混淆obfs:"
+		read -p "(default method: tls1.2_ticket_auth):" shadowsocksobfs
+		[ -z "${shadowsocksobfs}" ] && shadowsocksobfs="tls1.2_ticket_auth"
+		echo
+		echo "method = ${shadowsocksobfs}"
+		echo
+		echo "Please enter 混淆参数obfs_param:"
+		read -p "(default method: itunes.apple.com):" shadowsocksobfsparam
+		[ -z "${shadowsocksobfsparam}" ] && shadowsocksobfsparam="itunes.apple.com"
+		echo
+		echo "method = ${shadowsocksobfsparam}"
+		echo
+		
 		echo -e "${Info} 开始pull SSR中..."
 		docker pull teddysun/shadowsocks-r
 		mkdir -p /etc/shadowsocks-r
@@ -375,11 +448,11 @@ Install_SSR_Docker(){
 			"local_port":1080, 
 			"password":"${shadowsockspwd}", 
 			"timeout":120, 
-			"method":"chacha20-ietf", 
-			"protocol":"auth_aes128_md5", 
-			"protocol_param":"", 
-			"obfs":"tls1.2_ticket_auth", 
-			"obfs_param":"itunes.apple.com", 
+			"method":"${shadowsocksmethod}", 
+			"protocol":"${shadowsocksprotocol}", 
+			"protocol_param":"${shadowsocksprotocolparam}", 
+			"obfs":"${shadowsocksobfs}", 
+			"obfs_param":"${shadowsocksobfsparam}", 
 			"redirect":"", 
 			"dns_ipv6":false, 
 			"fast_open":true, 
@@ -392,7 +465,7 @@ Install_SSR_Docker(){
 	fi
 }
 
-#SSR安装完成打印信息
+# SSR安装完成打印信息
 Install_Completed_SSR() {
     clear
     echo -e "以下是配置信息！"
@@ -400,14 +473,15 @@ Install_Completed_SSR() {
     echo -e "Your Server IP        : ${green} $(get_ip) ${plain}"
     echo -e "Your Server Port      : ${green} ${shadowsocksport} ${plain}"
     echo -e "Your Password         : ${green} ${shadowsockspwd} ${plain}"
-    echo -e "Your Encryption Method: ${green} chacha20-ietf ${plain}"
-    echo -e "Protocol              : ${green} auth_aes128_md5 ${plain}"
-    echo -e "obfs                  : ${green} tls1.2_ticket_auth ${plain}"
-	echo -e "obfs_param            : ${green} itunes.apple.com ${plain}"
+    echo -e "Your Encryption Method: ${green} ${shadowsocksmethod} ${plain}"
+    echo -e "Protocol              : ${green} ${shadowsocksprotocol} ${plain}"
+    echo -e "protocol_param        : ${green} ${shadowsocksprotocolparam} ${plain}"
+    echo -e "obfs                  : ${green} ${shadowsocksobfs} ${plain}"
+	echo -e "obfs_param            : ${green} ${shadowsocksobfsparam} ${plain}"
     echo
 }
 
-#安装BT面板
+# 安装BT面板
 Install_BT(){
 	stty erase '^H' && read -p "准备好安装BT了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
@@ -419,14 +493,14 @@ Install_BT(){
 	fi
 }
 
-#安装Redis
+# 安装Redis
 Install_Redis(){
 	echo -e "${Info} 安装脚本维护中..."
 }
 
 ##系统检测组件##
 
-#检查系统
+# 检查系统
 check_sys(){
 	if [[ -f /etc/redhat-release ]]; then
 		release="centos"
@@ -445,7 +519,7 @@ check_sys(){
     fi
 }
 
-#获取ip
+# 获取ip
 get_ip() {
     local IP=$( ip addr | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | egrep -v "^192\.168|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-2]\.|^10\.|^127\.|^255\.|^0\." | head -n 1 )
     [ -z ${IP} ] && IP=$( wget -qO- -t1 -T2 ipv4.icanhazip.com )
