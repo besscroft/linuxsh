@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.2.8                 *"
+echo -e "* Version: 1.2.9                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="1.2.8"
+sh_ver="1.2.9"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -548,7 +548,7 @@ Install_Redis(){
 		echo "port = ${redis_name}"
 		echo
 		echo "Please enter redis password:"
-		read -p "(default password: redis_password):" redis_password
+		read -p "(default password: password):" redis_password
 		[ -z "${redis_password}" ] && redis_password="password"
 		echo
 		echo "port = ${redis_password}"

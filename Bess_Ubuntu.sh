@@ -6,12 +6,12 @@ echo -e "**********************************"
 echo -e "* System Required: Ubuntu 18.04  *"
 echo -e "* System Required: Ubuntu 20.04  *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 0.0.6                 *"
+echo -e "* Version: 0.0.7                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="0.0.6"
+sh_ver="0.0.7"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -521,7 +521,7 @@ Install_Redis(){
 		echo "port = ${redis_name}"
 		echo
 		echo "Please enter redis password:"
-		read -p "(default password: redis_password):" redis_password
+		read -p "(default password: password):" redis_password
 		[ -z "${redis_password}" ] && redis_password="password"
 		echo
 		echo "port = ${redis_password}"
