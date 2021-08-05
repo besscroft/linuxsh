@@ -9,11 +9,11 @@ chmod +x Bess_CentOS_7.sh
 ./Bess_CentOS_7.sh
 ```
 
-#### Bess_Ubuntu_1804
+#### Bess_Ubuntu
 
 ```shell
-wget -N --no-check-certificate "https://raw.githubusercontent.com/besscroft/LinuxShellGo/master/Bess_Ubuntu_1804.sh"
-chmod +x Bess_Ubuntu_1804.sh
-./Bess_Ubuntu_1804.sh
+wget -N --no-check-certificate "https://raw.githubusercontent.com/besscroft/LinuxShellGo/master/Bess_Ubuntu.sh"
+chmod +x Bess_Ubuntu.sh
+./Bess_Ubuntu.sh
 ```
 

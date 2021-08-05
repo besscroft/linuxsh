@@ -5,12 +5,12 @@ export PATH
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.2.7                 *"
+echo -e "* Version: 1.2.8                 *"
 echo -e "* Author: BessCroft              *"
 echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="1.2.7"
+sh_ver="1.2.8"
 github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
 
 red='\033[0;31m'
@@ -142,7 +142,7 @@ echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
 
  ${green}0.${green} 回到上级菜单
 ————————————管理————————————
- ${green}1.${green} 安装Redis(下个版本更新)
+ ${green}1.${green} 安装Docker版Redis
 ————————————优化————————————
  ${green}9.${plain} 退出脚本
 ————————————————————————————————" && echo
@@ -518,7 +518,67 @@ Install_BT(){
 
 # 安装Redis
 Install_Redis(){
-	echo -e "${Info} 将在下个版本更新..."
+	stty erase '^H' && read -p "准备好安装Docker版Redis了吗 ? [Y/n] :" yn
+	[ -z "${yn}" ] && yn="y"
+	if [[ $yn == [Yy] ]]; then
+		echo -e "${Info} 开始安装Docker版Redis面板中..."
+		echo
+		echo "Please enter conf文件夹路径:"
+		read -p "(default URI: /home/conf):" redis_conf
+		[ -z "${redis_conf}" ] && redis_conf="/home/conf"
+		echo
+		echo "method = ${redis_conf}"
+		echo
+		echo "Please enter data文件夹路径:"
+		read -p "(default URI: /home/data):" redis_data
+		[ -z "${redis_data}" ] && redis_data="/home/data"
+		echo
+		echo "method = ${redis_data}"
+		echo
+		echo "Please enter redis端口:"
+		read -p "(default port: 6379):" redis_port
+		[ -z "${redis_port}" ] && redis_port="6379"
+		echo
+		echo "port = ${redis_port}"
+		echo
+		echo "Please enter redis name:"
+		read -p "(default name: docker-redis):" redis_name
+		[ -z "${redis_name}" ] && redis_name="docker-redis"
+		echo
+		echo "port = ${redis_name}"
+		echo
+		echo "Please enter redis password:"
+		read -p "(default password: redis_password):" redis_password
+		[ -z "${redis_password}" ] && redis_password="password"
+		echo
+		echo "port = ${redis_password}"
+		echo
+		mkdir -p  ${redis_conf}
+		echo
+		mkdir -p  ${redis_data}
+		docker pull redis:6.0.9
+		docker run -d -p ${redis_port}:${redis_port} --restart always --name ${redis_name} \
+			-v ${redis_conf}/redis.conf:/usr/local/etc/redis/redis.conf \
+			-v ${redis_data}:/data \
+			redis:6.0.9 redis-server /usr/local/etc/redis/redis.conf \
+			--requirepass ${redis_password} --appendonly yes
+		echo
+		Install_Completed_Redis
+		echo -e "${Info} Docker版Redis面板安装成功！"
+	fi
+}
+
+# Docker版Redis安装完成打印信息
+Install_Completed_Redis() {
+    clear
+    echo -e "以下是配置信息！"
+	echo
+    echo -e "Your Server IP        : ${green} $(get_ip) ${plain}"
+    echo -e "Your Server Port      : ${green} ${redis_port} ${plain}"
+    echo -e "Your Password         : ${green} ${redis_password} ${plain}"
+    echo -e "data目录              : ${green} ${redis_data} ${plain}"
+    echo -e "conf目录              : ${green} ${redis_conf} ${plain}"
+    echo
 }
 
 ##系统检测组件##
