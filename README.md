@@ -1,4 +1,5 @@
-## LinuxShellGo
+## linuxsh
+
 每次都需要在笔记中 CV，有点烦，就抽了点时间学了下基本语法，然后依靠 Google，慢慢整出来了一个自用的 sh 脚本
 
 ### centos-amd64 适用于 centos7 x86_64 机器
