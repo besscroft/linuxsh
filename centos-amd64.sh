@@ -1,44 +1,58 @@
-#!/usr/bin/env bash
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
-export PATH
+#!/bin/sh
+
+ISLINUX=true
+OSTYPE="linux"
+
+if [ "x$(uname)" != "xLinux" ]; then
+  echo ""
+  echo 'Warning: Non-Linux operating systems are not supported! After downloading, please copy the tar.gz file to linux.'  
+  ISLINUX=false
+fi
+
+if [ -z "${ARCH}" ]; then
+  case "$(uname -m)" in
+  x86_64)
+    ARCH=amd64
+    ;;
+  *)
+    echo "${ARCH}, isn't supported!"
+    exit 1
+    ;;
+  esac
+fi
 
 echo -e "**********************************"
 echo -e "* System Required: CentOS 7      *"
 echo -e "* Description: 环境自动部署脚本  *"
-echo -e "* Version: 1.2.9                 *"
-echo -e "* Author: BessCroft              *"
+echo -e "* Version: 1.3.0                 *"
+echo -e "* Author: Bess Croft              *"
 echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="1.2.9"
-github="raw.githubusercontent.com/besscroft/linuxShellGO/master"
-
-red='\033[0;31m'
-green='\033[0;32m'
-yellow='\033[0;33m'
-plain='\033[0m'
+sh_ver="1.3.09"
+github="raw.githubusercontent.com/besscroft/linuxsh/master"
 
 # 开始菜单
 start_menu(){
 clear
-echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
- GitHub: ${green}[v${github}]${green}
+echo && echo -e " CentOS 7 一键安装管理脚本 [v${sh_ver}]
+ GitHub: [v${github}]
   
 -- 欢迎使用！！！ --  
 
- ${green}0.${green} 升级系统
+ 0. 升级系统
 ————————————管理————————————
- ${green}1.${green} 安装常用软件包
- ${red}2.${red} 安装或更新编译环境包
- ${red}3.${red} 安装最新稳定版内核
- ${green}4.${green} 安装开发软件
- ${green}5.${green} 安装一些软件
+ 1. 安装常用软件包
+ 2. 安装或更新编译环境包
+ 3. 安装最新稳定版内核
+ 4. 安装开发软件
+ 5. 安装一些软件
 ————————————优化————————————
- ${green}6.${green} 系统相关设置
- ${green}7.${green} BBR开启
- ${red}8.${red} 系统优化
- ${plain}9.${plain} 升级脚本
- ${plain}10.${plain} 退出脚本
+ 6. 系统相关设置
+ 7. BBR 开启
+ 8. 留空
+ 9. 升级脚本
+ 10. 退出脚本
 ————————————————————————————————" && echo
 read -p " 请输入数字 [0-10]:" num
 case "$num" in
@@ -67,7 +81,7 @@ case "$num" in
 	BBR_start
 	;;
 	8)
-	System_Optim
+	start_menu
 	;;
 	9)
 	Update_Shell
@@ -77,7 +91,7 @@ case "$num" in
 	;;
 	*)
 	clear
-	echo -e "${Error}:请输入正确数字 [0-10]"
+	echo -e ":请输入正确数字 [0-10]"
 	sleep 5s
 	start_menu
 	;;
@@ -87,19 +101,19 @@ esac
 # 子菜单 安装软件
 start_menu2(){
 clear
-echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
+echo && echo -e " CentOS一键安装管理脚本 [v${sh_ver}]
   
 -- 二级菜单 --  
 
- ${green}0.${green} 回到上级菜单
+ 0. 回到上级菜单
 ————————————管理————————————
- ${green}1.${green} 安装SSR(Docker)
- ${green}2.${green} 安装BT面板
- ${green}3.${green} 安装Docker(阿里源)
- ${green}4.${green} 安装Docker
- ${green}5.${green} 安装Docker版CCAA
+ 1. 安装SSR(Docker)
+ 2. 安装BT面板
+ 3. 安装Docker(阿里源)
+ 4. 安装Docker
+ 5. 安装Docker版CCAA
 ————————————优化————————————
- ${green}9.${plain} 退出脚本
+ 9. 退出脚本
 ————————————————————————————————" && echo
 read -p " 请输入数字 [0-9]:" num
 case "$num" in
@@ -126,7 +140,7 @@ case "$num" in
 	;;
 	*)
 	clear
-	echo -e "${Error}:请输入正确数字 [0-9]"
+	echo -e "请输入正确数字 [0-9]"
 	sleep 5s
 	start_menu2
 	;;
@@ -136,15 +150,15 @@ esac
 # 子菜单 安装开发软件
 start_menu3(){
 clear
-echo && echo -e " CentOS一键安装管理脚本 ${green}[v${sh_ver}]${green}
+echo && echo -e " CentOS 7 一键安装管理脚本 [v${sh_ver}]
   
 -- 二级菜单，安装开发软件 --  
 
- ${green}0.${green} 回到上级菜单
+ 0. 回到上级菜单
 ————————————管理————————————
- ${green}1.${green} 安装Docker版Redis
+ 1. 安装 Docker 版 Redis
 ————————————优化————————————
- ${green}9.${plain} 退出脚本
+ 9. 退出脚本
 ————————————————————————————————" && echo
 read -p " 请输入数字 [0-9]:" num
 case "$num" in
@@ -160,7 +174,7 @@ case "$num" in
 	;;
 	*)
 	clear
-	echo -e "${Error}:请输入正确数字 [0-9]"
+	echo -e "请输入正确数字 [0-9]"
 	sleep 5s
 	start_menu3
 	;;
@@ -173,12 +187,12 @@ Update_CentOS(){
 	stty erase '^H' && read -p "准备好更新系统了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始更新系统中..."
+		echo -e " 开始更新系统中..."
 		if [[ "${release}" == "centos" ]]; then
 		yum update -y
 		yum upgrade -y
 		fi
-		echo -e "${Info}系统升级成功！"
+		echo -e "系统升级成功！"
 	fi
 }
 
@@ -187,11 +201,11 @@ Install_package(){
 	stty erase '^H' && read -p "准备好安装了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始安装中..."
+		echo -e " 开始安装中..."
 		if [[ "${release}" == "centos" ]]; then
 		yum install -y curl vim wget unzip git nano yum-utils epel-release iftop dnf net-tools
 		fi
-		echo -e "${Info}安装成功！"
+		echo -e "安装成功！"
 	fi
 }
 
@@ -200,11 +214,11 @@ Install_make_package(){
 	stty erase '^H' && read -p "准备好安装编译环境包了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始安装编译环境包中..."
+		echo -e " 开始安装编译环境包中..."
 		if [[ "${release}" == "centos" ]]; then
 		yum install -y curl-devel expat-devel gettext-devel openssl-devel zlibdevel gcc-c++ perl-ExtUtils-MakeMaker zlib-devel bzip2-devel ncurses-devel sqlitedevel readline-devel tk-devel gcc make
 		fi
-		echo -e "${Info}安装成功！"
+		echo -e "安装成功！"
 	fi
 }
 
@@ -213,7 +227,7 @@ Install_ml_kernel(){
 	stty erase '^H' && read -p "想好了要安装最新稳定版内核了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始更新内核中..."
+		echo -e " 开始更新内核中..."
 		if [[ "${release}" == "centos" ]]; then
 		yum update -y
 		rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
@@ -223,11 +237,11 @@ Install_ml_kernel(){
 		sed -i 's/GRUB_DEFAULT=saved/GRUB_DEFAULT=0/' /etc/default/grub
 		grub2-mkconfig -o /boot/grub2/grub.cfg
 		fi
-		echo -e "${Tip} 重启系统后，请重新运行脚本开启${green}BBR${green}"
+		echo -e "${Tip} 重启系统后，请重新运行脚本开启 BBR"
 		stty erase '^H' && read -p "需要重启系统后，才能成功安装(替换)新内核，是否现在重启 ? [Y/n] :" yn
 		[ -z "${yn}" ] && yn="y"
 		if [[ $yn == [Yy] ]]; then
-			echo -e "${Info} 系统重启中..."
+			echo -e " 系统重启中..."
 			reboot
 		fi
 	fi
@@ -235,10 +249,10 @@ Install_ml_kernel(){
 
 # 安装Docker
 Install_DockerCommunity(){
-	stty erase '^H' && read -p "准备好安装Docker了吗 ? [Y/n] :" yn
+	stty erase '^H' && read -p "准备好安装 Docker 了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始安装Docker中..."
+		echo -e " 开始安装Docker中..."
 		if [[ "${release}" == "centos" ]]; then
 		yum remove docker \
 					docker-client \
@@ -256,24 +270,24 @@ Install_DockerCommunity(){
 		systemctl start docker
 		systemctl enable docker
 		fi
-		echo -e "${Info}安装成功！"
-		echo -e "${Info}已启动Docker！"
-		echo -e "${Info}已设置Docker开机自启！"
-		stty erase '^H' && read -p "想运行一下hello-world镜像吗 ? [Y/n] :" yn
+		echo -e "安装成功！"
+		echo -e "已启动 Docker！"
+		echo -e "已设置 Docker 开机自启！"
+		stty erase '^H' && read -p "想运行一下 hello-world 镜像吗 ? [Y/n] :" yn
 		[ -z "${yn}" ] && yn="y"
 		if [[ $yn == [Yy] ]]; then
-			echo -e "${Info} 开始pull..."
+			echo -e " 开始 pull..."
 			docker run hello-world
 		fi
 	fi
 }
 
-# 安装Docker(阿里源)
+# 安装 Docker(阿里源)
 Install_DockerCommunity_ali(){
-	stty erase '^H' && read -p "准备好安装Docker了吗 ? [Y/n] :" yn
+	stty erase '^H' && read -p "准备好安装 Docker 了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始安装Docker中..."
+		echo -e " 开始安装 Docker 中..."
 		if [[ "${release}" == "centos" ]]; then
 		yum remove docker \
 					docker-client \
@@ -291,28 +305,28 @@ Install_DockerCommunity_ali(){
 		systemctl start docker
 		systemctl enable docker
 		fi
-		echo -e "${Info}安装成功！"
-		echo -e "${Info}已启动Docker！"
-		echo -e "${Info}已设置Docker开机自启！"
-		stty erase '^H' && read -p "想运行一下hello-world镜像吗 ? [Y/n] :" yn
+		echo -e "安装成功！"
+		echo -e "已启动 Docker！"
+		echo -e "已设置 Docker 开机自启！"
+		stty erase '^H' && read -p "想运行一下 hello-world 镜像吗 ? [Y/n] :" yn
 		[ -z "${yn}" ] && yn="y"
 		if [[ $yn == [Yy] ]]; then
-			echo -e "${Info} 开始pull..."
+			echo -e " 开始 pull..."
 			docker run hello-world
 		fi
 	fi
 }
 
-# 安装Docker版CCAA
+# 安装 Docker 版 CCAA
 Install_DockerCCAA(){
-	echo -e "${red} 请确保已经安装了Docker，否则将无法安装Docker版CCAA！${green}"
-	stty erase '^H' && read -p "准备安装SSR了吗 ? [Y/n] :" yn
+	echo -e " 请确保已经安装了 Docker，否则将无法安装 Docker 版 CCAA！"
+	stty erase '^H' && read -p "准备安装 SSR 了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始安装CCAA中..."
+		echo -e " 开始安装 CCAA 中..."
 		echo "Please enter password:"
-		read -p "(default password: besscroft.com):" ccaapwd
-		[ -z "${ccaapwd}" ] && ccaapwd="besscroft.com"
+		read -p "(default password: fly52linux):" ccaapwd
+		[ -z "${ccaapwd}" ] && ccaapwd="fly52linux"
 		echo
 		echo "password = ${ccaapwd}"
 		echo "Please enter 宿主机下载目录:"
@@ -320,7 +334,7 @@ Install_DockerCCAA(){
 		[ -z "${hosturl}" ] && hosturl="/www/wwwroot/download"
 		echo
 		echo "下载目录 = ${hosturl}"
-		echo -e "${Info} 开始pull CCAA中..."
+		echo -e " 开始 pull CCAA 中..."
 		mkdir -p ${hosturl}
 		docker run --name="ccaa" -d -p 6080:6080 -p 6081:6081 -p 6800:6800 -p 51413:51413 \
     -v ${hosturl}:/data/ccaaDown \
@@ -328,18 +342,18 @@ Install_DockerCCAA(){
     helloz/ccaa \
     sh -c "dccaa pass && dccaa start"
 		Install_Completed_CCAA
-		echo -e "${Info}安装CCAA成功！"
+		echo -e "安装 CCAA 成功！"
 	fi
 }
 
-# CCAA安装完成打印信息
+# CCAA 安装完成打印信息
 Install_Completed_CCAA() {
     clear
     echo -e "以下是配置信息！"
 	echo
-    echo -e "请确保防火墙放行右侧端口: ${green} 6080、6081、6800、51413 ${plain}"
-    echo -e "Aria2面板访问地址      : ${green} http://$(get_ip):6080"
-    echo -e "认证密码			   : ${green} ${ccaapwd} ${plain}"
+    echo -e "请确保防火墙放行右侧端口:  6080、6081、6800、51413 "
+    echo -e "Aria2面板访问地址      :  http://$(get_ip):6080"
+    echo -e "认证密码			   :  ${ccaapwd} "
     echo
 }
 
@@ -348,44 +362,39 @@ System_Settings(){
 	stty erase '^H' && read -p "准备好设置系统配置了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始设置系统配置中..."
+		echo -e " 开始设置系统配置中..."
 		ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-		echo -e "${Info}设置成功！"
+		echo -e "设置成功！"
 	fi
 }
 
-# BBR开启
+# BBR 开启
 BBR_start(){
-	stty erase '^H' && read -p "准备开启BBR了吗 ? [Y/n] :" yn
+	stty erase '^H' && read -p "准备开启 BBR 了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始设置BBR配置中..."
+		echo -e " 开始设置 BBR 配置中..."
 		echo 'net.core.default_qdisc=fq' | sudo tee -a /etc/sysctl.conf
 		echo 'net.ipv4.tcp_congestion_control=bbr' | sudo tee -a /etc/sysctl.conf
 		sysctl -p
 		sysctl net.ipv4.tcp_congestion_control
 		sysctl net.ipv4.tcp_available_congestion_control
 		lsmod | grep bbr
-		echo -e "${Info}BBR启动成功！"
+		echo -e "BBR 启动成功！"
 	fi
-}
-
-# 系统优化
-System_Optim(){
-	echo -e "${Info}还没写！"
 }
 
 # 更新脚本
 Update_Shell(){
 	echo -e "当前版本为 [ ${sh_ver} ]，开始检测最新版本..."
-	sh_new_ver=$(wget --no-check-certificate -qO- "http://${github}/Bess_CentOS_7.sh"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1)
-	[[ -z ${sh_new_ver} ]] && echo -e "${Error} 检测最新版本失败 !" && start_menu
+	sh_new_ver=$(wget --no-check-certificate -qO- "http://${github}/centos-amd64.sh"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1)
+	[[ -z ${sh_new_ver} ]] && echo -e " 检测最新版本失败 !" && start_menu
 	if [[ ${sh_new_ver} != ${sh_ver} ]]; then
 		echo -e "发现新版本[ ${sh_new_ver} ]，是否更新？[Y/n]"
 		read -p "(默认: y):" yn
 		[[ -z "${yn}" ]] && yn="y"
 		if [[ ${yn} == [Yy] ]]; then
-			wget -N --no-check-certificate http://${github}/Bess_CentOS_7.sh && chmod +x Bess_CentOS_7.sh
+			wget -N --no-check-certificate http://${github}/centos-amd64.sh && chmod +x centos-amd64.sh
 			echo -e "脚本已更新为最新版本[ ${sh_new_ver} ] !"
 		else
 			echo && echo "	已取消..." && echo
@@ -396,16 +405,16 @@ Update_Shell(){
 	fi
 }
 
-# 安装SSR(Docker)
+# 安装 SSR(Docker)
 Install_SSR_Docker(){
-	echo -e "${red} 请确保已经安装了Docker，否则将无法安装Docker版SSR！${green}"
-	stty erase '^H' && read -p "准备安装SSR了吗 ? [Y/n] :" yn
+	echo -e " 请确保已经安装了 Docker，否则将无法安装 Docker 版 SSR！"
+	stty erase '^H' && read -p "准备安装 SSR 了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始安装SSR中..."
+		echo -e " 开始安装 SSR 中..."
 		echo "Please enter password:"
-		read -p "(default password: besscroft.com):" shadowsockspwd
-		[ -z "${shadowsockspwd}" ] && shadowsockspwd="besscroft.com"
+		read -p "(default password: fly52linux):" shadowsockspwd
+		[ -z "${shadowsockspwd}" ] && shadowsockspwd="fly52linux"
 		echo
 		echo "password = ${shadowsockspwd}"
 		echo
@@ -422,44 +431,44 @@ Install_SSR_Docker(){
 				echo
 				break
 			else
-				echo -e "${red}Error:${plain} Please enter a correct number [1-65535]"
+				echo -e "Error: Please enter a correct number [1-65535]"
 			fi
 		else
-			echo -e "${red}Error:${plain} Please enter a correct number [1-65535]"
+			echo -e "Error: Please enter a correct number [1-65535]"
 		fi
 		done
-		echo "Please enter 加密method:"
+		echo "Please enter 加密 method:"
 		read -p "(default method: chacha20-ietf):" shadowsocksmethod
 		[ -z "${shadowsocksmethod}" ] && shadowsocksmethod="chacha20-ietf"
 		echo
 		echo "method = ${shadowsocksmethod}"
 		echo
-		echo "Please enter 协议protocol:"
+		echo "Please enter 协议 protocol:"
 		read -p "(default method: auth_aes128_md5):" shadowsocksprotocol
 		[ -z "${shadowsocksprotocol}" ] && shadowsocksprotocol="auth_aes128_md5"
 		echo
 		echo "method = ${shadowsocksprotocol}"
 		echo
-		echo "Please enter 协议参数protocol_param:"
+		echo "Please enter 协议参数 protocol_param:"
 		read -p "(default method: 默认为空):" shadowsocksprotocolparam
 		[ -z "${shadowsocksprotocolparam}" ] && shadowsocksprotocolparam=""
 		echo
 		echo "method = ${shadowsocksprotocolparam}"
 		echo
-		echo "Please enter 混淆obfs:"
+		echo "Please enter 混淆 obfs:"
 		read -p "(default method: tls1.2_ticket_auth):" shadowsocksobfs
 		[ -z "${shadowsocksobfs}" ] && shadowsocksobfs="tls1.2_ticket_auth"
 		echo
 		echo "method = ${shadowsocksobfs}"
 		echo
-		echo "Please enter 混淆参数obfs_param:"
+		echo "Please enter 混淆参数 obfs_param:"
 		read -p "(default method: itunes.apple.com):" shadowsocksobfsparam
 		[ -z "${shadowsocksobfsparam}" ] && shadowsocksobfsparam="itunes.apple.com"
 		echo
 		echo "method = ${shadowsocksobfsparam}"
 		echo
 
-		echo -e "${Info} 开始pull SSR中..."
+		echo -e " 开始 pull SSR 中..."
 		docker pull teddysun/shadowsocks-r
 		mkdir -p /etc/shadowsocks-r
 		cat > /etc/shadowsocks-r/config.json <<-EOF
@@ -484,58 +493,58 @@ Install_SSR_Docker(){
 		EOF
 		docker run -d -p ${shadowsocksport}:${shadowsocksport} -p ${shadowsocksport}:${shadowsocksport}/udp --name ssr --restart=always -v /etc/shadowsocks-r:/etc/shadowsocks-r teddysun/shadowsocks-r
 		Install_Completed_SSR
-		echo -e "${Info}安装SSR成功！"
+		echo -e "安装 SSR 成功！"
 	fi
 }
 
-# SSR安装完成打印信息
+# SSR 安装完成打印信息
 Install_Completed_SSR() {
     clear
     echo -e "以下是配置信息！"
 	echo
-    echo -e "Your Server IP        : ${green} $(get_ip) ${plain}"
-    echo -e "Your Server Port      : ${green} ${shadowsocksport} ${plain}"
-    echo -e "Your Password         : ${green} ${shadowsockspwd} ${plain}"
-    echo -e "Your Encryption Method: ${green} ${shadowsocksmethod} ${plain}"
-    echo -e "Protocol              : ${green} ${shadowsocksprotocol} ${plain}"
-    echo -e "protocol_param        : ${green} ${shadowsocksprotocolparam} ${plain}"
-    echo -e "obfs                  : ${green} ${shadowsocksobfs} ${plain}"
-	echo -e "obfs_param            : ${green} ${shadowsocksobfsparam} ${plain}"
+    echo -e "Your Server IP        :  $(get_ip) "
+    echo -e "Your Server Port      :  ${shadowsocksport} "
+    echo -e "Your Password         :  ${shadowsockspwd} "
+    echo -e "Your Encryption Method:  ${shadowsocksmethod} "
+    echo -e "Protocol              :  ${shadowsocksprotocol} "
+    echo -e "protocol_param        :  ${shadowsocksprotocolparam} "
+    echo -e "obfs                  :  ${shadowsocksobfs} "
+	echo -e "obfs_param            :  ${shadowsocksobfsparam} "
     echo
 }
 
-# 安装BT面板
+# 安装 BT 面板
 Install_BT(){
-	stty erase '^H' && read -p "准备好安装BT了吗 ? [Y/n] :" yn
+	stty erase '^H' && read -p "准备好安装 BT 了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始安装BT面板中..."
-		echo -e "${Info} 安装过程中需要手动确认..."
+		echo -e " 开始安装 BT 面板中..."
+		echo -e " 安装过程中需要手动确认..."
 		yum install -y wget && wget -O install.sh http://download.bt.cn/install/install_6.0.sh && sh install.sh
-		echo -e "${Info} BT面板安装成功！"
+		echo -e " BT 面板安装成功！"
 	fi
 }
 
-# 安装Redis
+# 安装 Redis
 Install_Redis(){
-	stty erase '^H' && read -p "准备好安装Docker版Redis了吗 ? [Y/n] :" yn
+	stty erase '^H' && read -p "准备好安装 Docker 版 Redis 了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "${Info} 开始安装Docker版Redis面板中..."
+		echo -e " 开始安装 Docker 版 Redis 面板中..."
 		echo
-		echo "Please enter conf文件夹路径:"
+		echo "Please enter conf 文件夹路径:"
 		read -p "(default URI: /home/conf):" redis_conf
 		[ -z "${redis_conf}" ] && redis_conf="/home/conf"
 		echo
 		echo "method = ${redis_conf}"
 		echo
-		echo "Please enter data文件夹路径:"
+		echo "Please enter data 文件夹路径:"
 		read -p "(default URI: /home/data):" redis_data
 		[ -z "${redis_data}" ] && redis_data="/home/data"
 		echo
 		echo "method = ${redis_data}"
 		echo
-		echo "Please enter redis端口:"
+		echo "Please enter redis 端口:"
 		read -p "(default port: 6379):" redis_port
 		[ -z "${redis_port}" ] && redis_port="6379"
 		echo
@@ -564,20 +573,20 @@ Install_Redis(){
 			--requirepass ${redis_password} --appendonly yes
 		echo
 		Install_Completed_Redis
-		echo -e "${Info} Docker版Redis面板安装成功！"
+		echo -e " Docker 版 Redis 面板安装成功！"
 	fi
 }
 
-# Docker版Redis安装完成打印信息
+# Docker 版 Redis 安装完成打印信息
 Install_Completed_Redis() {
     clear
     echo -e "以下是配置信息！"
 	echo
-    echo -e "Your Server IP        : ${green} $(get_ip) ${plain}"
-    echo -e "Your Server Port      : ${green} ${redis_port} ${plain}"
-    echo -e "Your Password         : ${green} ${redis_password} ${plain}"
-    echo -e "data目录              : ${green} ${redis_data} ${plain}"
-    echo -e "conf目录              : ${green} ${redis_conf} ${plain}"
+    echo -e "Your Server IP        :  $(get_ip) "
+    echo -e "Your Server Port      :  ${redis_port} "
+    echo -e "Your Password         :  ${redis_password} "
+    echo -e "data 目录             :  ${redis_data} "
+    echo -e "conf 目录             :  ${redis_conf} "
     echo
 }
 
@@ -602,7 +611,7 @@ check_sys(){
     fi
 }
 
-# 获取ip
+# 获取 ip
 get_ip() {
     local IP=$( ip addr | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | egrep -v "^192\.168|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-2]\.|^10\.|^127\.|^255\.|^0\." | head -n 1 )
     [ -z ${IP} ] && IP=$( wget -qO- -t1 -T2 ipv4.icanhazip.com )
@@ -610,7 +619,7 @@ get_ip() {
     [ ! -z ${IP} ] && echo ${IP} || echo
 }
 
-# 检查Linux版本
+# 检查 Linux 版本
 check_version(){
 	if [[ -s /etc/redhat-release ]]; then
 		version=`grep -oE  "[0-9.]+" /etc/redhat-release | cut -d . -f 1`
@@ -627,5 +636,5 @@ check_version(){
 
 check_sys
 check_version
-[[ ${release} != "centos" ]] && echo -e "${Error} 本脚本不支持当前系统 ${release} !" && exit 1
+[[ ${release} != "centos" ]] && echo -e " 本脚本不支持当前系统 ${release} !" && exit 1
 start_menu
