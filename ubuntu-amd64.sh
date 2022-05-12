@@ -27,12 +27,12 @@ echo -e "**********************************"
 echo -e "* System Required: ubuntu 18     *"
 echo -e "* System Required: ubuntu 20     *"
 echo -e "* Description: 环境自动部署脚本    *"
-echo -e "* Version: 1.0.0                 *"
+echo -e "* Version: 1.0.1                 *"
 echo -e "* Author: Bess Croft              *"
 echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="1.0.0"
+sh_ver="1.0.1"
 github="raw.githubusercontent.com/besscroft/linuxsh/master"
 
 # 开始菜单
@@ -110,11 +110,12 @@ echo && echo -e " ubuntu 一键安装管理脚本 [v${sh_ver}]
 
  0. 回到上级菜单
 ————————————管理————————————
- 1. 安装 SSR(Docker)
- 2. 安装 BT 面板
+ 1. 安装 SSR(Docker 版)
+ 2. 安装 宝塔面板(不推荐)
  3. 安装 Docker(阿里源)
- 4. 安装 Docker
+ 4. 安装 Docker(官方源)
  5. 安装 Docker 版 CCAA
+ 6. 安装 SS-Rust(Docker 版)
 ————————————优化————————————
  9. 退出脚本
 ————————————————————————————————" && echo
@@ -137,6 +138,9 @@ case "$num" in
 	;;
 	5)
 	Install_DockerCCAA
+	;;
+	6)
+	Install_SS_Rust_Docker
 	;;
 	9)
 	exit 1
@@ -472,6 +476,68 @@ Install_SSR_Docker(){
 	fi
 }
 
+# 安装 SS-Rust(Docker 版)
+Install_SS_Rust_Docker() {
+	echo -e "请确保已经安装了 Docker，否则将无法安装 Docker 版 SS-Rust！"
+	stty erase '^H' && read -p "准备安装 SS-Rust 了吗 ? [Y/n] :" yn
+	[ -z "${yn}" ] && yn="y"
+	if [[ $yn == [Yy] ]]; then
+		echo -e "开始安装 SS-Rust 中..."
+		echo "Please enter password:"
+		read -p "(default password: fly52linux):" ssrustpwd
+		[ -z "${ssrustpwd}" ] && ssrustpwd="fly52linux"
+		echo
+		echo "password = ${ssrustpwd}"
+		echo
+		while true
+		do
+		echo -e "Please enter a port for [1-65535]"
+		read -p "(default port: 22333):" ssrustport
+		[ -z "${ssrustport}" ] && ssrustport="22333"
+		expr ${ssrustport} + 0 &>/dev/null
+		if [ $? -eq 0 ]; then
+			if [ ${ssrustport} -ge 1 ] && [ ${ssrustport} -le 65535 ]; then
+				echo
+				echo "port = ${ssrustport}"
+				echo
+				break
+			else
+				echo -e "Error: Please enter a correct number [1-65535]"
+			fi
+		else
+			echo -e "Error: Please enter a correct number [1-65535]"
+		fi
+		done
+		echo "Please enter 加密 method:"
+		read -p "(default method: chacha20-ietf-poly1305):" ssrustmethod
+		[ -z "${ssrustmethod}" ] && ssrustmethod="chacha20-ietf-poly1305"
+		echo
+		echo "method = ${ssrustmethod}"
+		echo
+		echo -e "开始 pull SS-Rust 中..."
+		mkdir -p /etc/shadowsocks-rust
+		cat > /etc/shadowsocks-rust/config.json <<-EOF
+		{
+			"server":"0.0.0.0",
+			"server_port":${ssrustport},
+			"password":"${ssrustpwd}",
+			"timeout":300,
+			"method":"${ssrustmethod}",
+			"nameserver":"8.8.8.8",
+			"mode":"tcp_and_udp"
+		}
+		EOF
+		docker run --name ssserver-rust \
+			--restart always \
+			-p ${ssrustport}:${ssrustport}/tcp \
+			-p ${ssrustport}:${ssrustport}/udp \
+			-v /etc/shadowsocks-rust/config.json:/etc/shadowsocks-rust/config.json \
+			-dit ghcr.io/shadowsocks/ssserver-rust:latest
+		Install_Completed_SS_Rust
+		echo -e "安装 SS-Rust 成功！"
+	fi
+}
+
 # SSR 安装完成打印信息
 Install_Completed_SSR() {
     clear
@@ -488,9 +554,21 @@ Install_Completed_SSR() {
     echo
 }
 
+# SS-Rust 安装完成打印信息
+Install_Completed_SS_Rust() {
+    clear
+    echo -e "以下是配置信息！"
+	echo
+    echo -e "Your Server IP        :  $(get_ip)"
+    echo -e "Your Server Port      :  ${ssrustport}"
+    echo -e "Your Password         :  ${ssrustpwd}"
+    echo -e "Your Encryption Method:  ${ssrustmethod}"
+    echo
+}
+
 # 安装 BT 面板
 Install_BT(){
-	stty erase '^H' && read -p "准备好安装 BT 了吗 ? [Y/n] :" yn
+	stty erase '^H' && read -p "准备好安装宝塔面板了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "开始安装 BT 面板中..."
