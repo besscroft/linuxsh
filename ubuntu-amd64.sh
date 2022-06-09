@@ -27,12 +27,12 @@ echo -e "**********************************"
 echo -e "* System Required: ubuntu 18     *"
 echo -e "* System Required: ubuntu 20     *"
 echo -e "* Description: 环境自动部署脚本    *"
-echo -e "* Version: 1.0.1                 *"
+echo -e "* Version: 1.1.0                 *"
 echo -e "* Author: Bess Croft              *"
 echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="1.0.1"
+sh_ver="1.1.0"
 github="raw.githubusercontent.com/besscroft/linuxsh/master"
 
 # 开始菜单
@@ -111,7 +111,7 @@ echo && echo -e " ubuntu 一键安装管理脚本 [v${sh_ver}]
  0. 回到上级菜单
 ————————————管理————————————
  1. 安装 SSR(Docker 版)
- 2. 安装 宝塔面板(不推荐)
+ 2. 安装 Vesta 面板
  3. 安装 Docker(阿里源)
  4. 安装 Docker(官方源)
  5. 安装 Docker 版 CCAA
@@ -128,7 +128,7 @@ case "$num" in
 	Install_SSR_Docker
 	;;
 	2)
-	Install_BT
+	Install_Vesta
 	;;
 	3)
 	Install_DockerCommunity_ali
@@ -566,15 +566,15 @@ Install_Completed_SS_Rust() {
     echo
 }
 
-# 安装 BT 面板
-Install_BT(){
-	stty erase '^H' && read -p "准备好安装宝塔面板了吗 ? [Y/n] :" yn
+# 安装 Vesta 面板
+Install_Vesta(){
+	stty erase '^H' && read -p "准备好安装 Vesta 面板了吗 ? [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-		echo -e "开始安装 BT 面板中..."
+		echo -e "开始安装 Vesta 面板中..."
 		echo -e "安装过程中需要手动确认..."
-		wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh && sudo bash install.sh
-		echo -e "BT 面板安装成功！"
+		curl -O http://vestacp.com/pub/vst-install.sh && sudo bash vst-install.sh
+		echo -e "Vesta 面板安装成功！"
 	fi
 }
 
