@@ -22,4 +22,9 @@ chmod +x ubuntu-amd64.sh
 ./ubuntu-amd64.sh
 ```
 
-### debian-aarch64 适用于 debian arm 机器，暂时没写
+### debian-aarch64 适用于 debian arm 机器
+```shell
+wget -N --no-check-certificate "https://raw.githubusercontent.com/besscroft/linuxsh/master/debian-aarch64.sh"
+chmod +x debian-aarch64.sh
+./debian-aarch64.sh
+```
