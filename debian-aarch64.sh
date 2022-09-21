@@ -265,7 +265,7 @@ Install_DockerCommunity(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "开始安装 Docker 中..."
-		if [[ "${release}" == "ubuntu" ]]; then
+		if [[ "${release}" == "debian" ]]; then
 		sudo apt-get remove docker docker-engine docker.io containerd runc
 		sudo apt-get update
 		sudo apt-get install \
