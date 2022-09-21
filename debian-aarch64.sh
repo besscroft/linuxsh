@@ -27,12 +27,12 @@ echo -e "**********************************"
 echo -e "* System Required: Debian 10/11  *"
 echo -e "* System Required: Debian 10/11  *"
 echo -e "* Description: 环境自动部署脚本    *"
-echo -e "* Version: 0.0.1                 *"
+echo -e "* Version: 0.0.2                 *"
 echo -e "* Author: Bess Croft              *"
 echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="0.0.1"
+sh_ver="0.0.2"
 github="raw.githubusercontent.com/besscroft/linuxsh/master"
 
 # 开始菜单
@@ -178,7 +178,7 @@ Update_Debian(){
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
 		echo -e "开始更新系统中..."
-		if [[ "${release}" == "ubuntu" ]]; then
+		if [[ "${release}" == "debian" ]]; then
 		apt-get update -y
 		apt-get upgrade -y
 		fi
