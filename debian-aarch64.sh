@@ -27,12 +27,12 @@ echo -e "**********************************"
 echo -e "* System Required: Debian 10/11  *"
 echo -e "* System Required: Debian 10/11  *"
 echo -e "* Description: 环境自动部署脚本    *"
-echo -e "* Version: 0.0.2                 *"
+echo -e "* Version: 0.0.3                 *"
 echo -e "* Author: Bess Croft              *"
 echo -e "* Blog: https://besscroft.com    *"
 echo -e "**********************************"
 
-sh_ver="0.0.2"
+sh_ver="0.0.3"
 github="raw.githubusercontent.com/besscroft/linuxsh/master"
 
 # 开始菜单
